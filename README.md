@@ -32,8 +32,8 @@
 ## 📝 Project Description
 
 This project implements an **autonomous waste sorting mechanism** that detects
-incoming waste, classifies it using metal detection and moisture sensing,
-and directs it to the appropriate bin using a stepper motor and
+incoming waste, classifies it using inductive metal detection and moisture
+sensing, and directs it to the appropriate bin using a stepper motor and
 servo-controlled gate.
 
 Bin fill levels are monitored in real time with ultrasonic sensors, and data
@@ -52,6 +52,10 @@ The ESP32 microcontroller handles all logic, WiFi connectivity, sensor reading,
 and motor control simultaneously. ThingSpeak provides a free IoT cloud dashboard
 for monitoring bin levels remotely from any device.
 
+The system runs on a dual power setup — USB/power bank for ESP32 and sensors,
+and a 2S 18650 battery pack with buck converter for the inductive metal detector
+which requires higher voltage.
+
 </details>
 
 ---
@@ -66,10 +70,11 @@ for monitoring bin levels remotely from any device.
 | 🚪 **Servo gate** | Opens/closes to drop waste into selected bin |
 | 📡 **Ultrasonic bin sensors** | Fill level (0–100%) with median-of-3 filtering |
 | 💧 **Rain/moisture sensor** | Analog sensor distinguishes wet vs dry waste |
-| 🔩 **Metal detector** | Highest-priority with memory flag system |
+| 🔩 **Inductive metal detector** | Highest-priority NPN NO proximity sensor |
 | 🔔 **Active buzzer alarm** | Beeps 3× when bin exceeds 55% fill threshold |
 | 🔄 **WiFi auto-reconnect** | Reconnects automatically if WiFi drops |
 | 🧠 **Smart metal memory** | Remembers metal detection for 2 seconds after sensor passes |
+| ⚡ **Buck converter power** | Stable regulated voltage for all components |
 
 ---
 
@@ -84,8 +89,10 @@ for monitoring bin levels remotely from any device.
                     └──────┬──────┘
               ┌────────────┼────────────┐
               ▼            ▼            ▼
-         Metal Det.   Rain Sensor   Ultrasonic x3
-         (GPIO 13)    (GPIO 35)     (fill level)
+        Inductive      Rain Sensor   Ultrasonic x3
+        Proximity      (GPIO 35)     (fill level)
+        Sensor
+        (GPIO 13)
               │            │
               ▼            ▼
          ┌──────────────────────┐
@@ -108,19 +115,24 @@ for monitoring bin levels remotely from any device.
 
 ## 🔧 Hardware Components
 
-| # | Component | Purpose |
-|---|-----------|---------|
-| 1 | 🧠 ESP32 Dev Board | Main microcontroller |
-| 2 | ⚙️ 28BYJ-48 Stepper + ULN2003 | Rotating sorter mechanism |
-| 3 | 🔄 SG90 / MG90S Servo | Gate control |
-| 4 | 📡 3× HC-SR04 Ultrasonic | Bin level sensing |
-| 5 | 👁️ FC-51 / TCRT5000 IR sensor | Object detection at input |
-| 6 | 🔩 Metal detector module | Metal vs non-metal classification |
-| 7 | 💧 Rain/moisture sensor (analog) | Wet vs dry classification |
-| 8 | 🔔 Active buzzer | Fill-level alarm |
-| 9 | 🗑️ 3× bins | Wet, dry, metal waste containers |
-| 10 | 🔋 9V battery + connector | Power for metal detector |
-| 11 | 💻 USB / Power bank (5V) | Power for ESP32 + all sensors |
+| # | Component | Model | Purpose |
+|---|-----------|-------|---------|
+| 1 | 🧠 ESP32 Dev Board | ESP-32S 30P NodeMCU | Main microcontroller + WiFi |
+| 2 | ⚙️ Stepper Motor + Driver | 28BYJ-48 + ULN2003 | Rotating sorter mechanism |
+| 3 | 🔄 Servo Motor | SG90 180° | Gate open/close control |
+| 4 | 📡 Ultrasonic Sensor ×3 | HC-SR04 | Bin fill level sensing |
+| 5 | 👁️ IR Obstacle Sensor | IR Sensor Module | Object detection at input |
+| 6 | 🔩 Inductive Proximity Sensor | LJ12A3-4-Z/BX NPN NO M12 | Metal vs non-metal detection |
+| 7 | 💧 Rain/Moisture Sensor | Rain & Steam Module | Wet vs dry classification |
+| 8 | 🔔 Active Buzzer | Active Buzzer Module | Fill-level alarm |
+| 9 | ⚡ Buck Converter | HW-411A LM2596 3A | Step-down voltage regulator |
+| 10 | 🔋 Battery Holder | 2S 18650 Holder | Battery pack housing |
+| 11 | 🔋 18650 Battery ×2 | 3.7V Solderable | Power supply cells |
+| 12 | 🔘 Rocker Switch | KCD11 Mini Red | Main power on/off switch |
+| 13 | 🧪 Breadboard | Full Size 830 Tie Points | Circuit prototyping |
+| 14 | 🔌 Jumper Wires | Male/Female/M-M | Component connections |
+| 15 | 🔧 Motor Shaft | — | Mechanical coupling |
+| 16 | 🗑️ 3× Bins | — | Wet, dry, metal containers |
 
 ---
 
@@ -128,51 +140,63 @@ for monitoring bin levels remotely from any device.
 
 | Component | GPIO | Notes |
 |-----------|------|-------|
-| **⚙️ Stepper IN1** | 4 | Coil 1 |
-| **⚙️ Stepper IN2** | 2 | Coil 2 |
-| **⚙️ Stepper IN3** | 18 | Coil 3 |
-| **⚙️ Stepper IN4** | 19 | Coil 4 |
+| **⚙️ Stepper IN1** | 4 | Coil 1 — ULN2003 IN1 |
+| **⚙️ Stepper IN2** | 2 | Coil 2 — ULN2003 IN2 |
+| **⚙️ Stepper IN3** | 18 | Coil 3 — ULN2003 IN3 |
+| **⚙️ Stepper IN4** | 19 | Coil 4 — ULN2003 IN4 |
 | **🔄 Servo Signal** | 23 | PWM output |
-| **👁️ IR Sensor** | 32 | Object present = LOW |
-| **🔩 Metal detector** | 13 | Metal detected = LOW |
-| **💧 Rain/moisture AO** | 35 | Analog input-only pin |
+| **👁️ IR Sensor OUT** | 32 | Object present = LOW |
+| **🔩 Inductive Sensor OUT** | 13 | Metal detected = LOW (NPN NO) |
+| **💧 Rain Sensor AO** | 35 | Analog input-only pin |
 | **🔔 Buzzer** | 21 | Active-low (LOW = ON) |
-| **📡 Ultrasonic Wet** | TRIG: 26, ECHO: 12 | Wet bin level |
-| **📡 Ultrasonic Dry** | TRIG: 25, ECHO: 14 | Dry bin level |
-| **📡 Ultrasonic Metal** | TRIG: 33, ECHO: 27 | Metal bin level |
+| **📡 Ultrasonic Wet TRIG** | 26 | Wet bin trigger |
+| **📡 Ultrasonic Wet ECHO** | 12 | Wet bin echo |
+| **📡 Ultrasonic Dry TRIG** | 25 | Dry bin trigger |
+| **📡 Ultrasonic Dry ECHO** | 14 | Dry bin echo |
+| **📡 Ultrasonic Metal TRIG** | 33 | Metal bin trigger |
+| **📡 Ultrasonic Metal ECHO** | 27 | Metal bin echo |
 
 ---
 
 ## ⚡ Power Setup
 ```
-╔══════════════════════════════════════╗
-║   Laptop USB / Power Bank (5V)       ║
-║         │                            ║
-║         └──► ESP32 (via USB)         ║
-║              │                       ║
-║              ├──► Stepper + ULN2003  ║
-║              ├──► Servo              ║
-║              ├──► IR Sensor          ║
-║              ├──► Ultrasonic x3      ║
-║              ├──► Rain Sensor        ║
-║              └──► Buzzer             ║
-╠══════════════════════════════════════╣
-║   9V Battery + Connector             ║
-║         │                            ║
-║         └──► Metal Detector VCC      ║
-║              Metal Detector GND      ║
-║              └──► ESP32 GND ✅       ║
-╚══════════════════════════════════════╝
+╔══════════════════════════════════════════════╗
+║   USB / Laptop (5V)                          ║
+║         │                                    ║
+║         └──► ESP32 NodeMCU (via USB port)    ║
+║              │                               ║
+║              ├──► 28BYJ-48 Stepper + ULN2003 ║
+║              ├──► SG90 Servo                 ║
+║              ├──► HC-SR04 Ultrasonic ×3      ║
+║              ├──► IR Obstacle Sensor         ║
+║              ├──► Rain/Steam Sensor          ║
+║              └──► Active Buzzer              ║
+╠══════════════════════════════════════════════╣
+║   2S 18650 Battery Pack (7.4V)               ║
+║         │                                    ║
+║         ├──► LM2596 Buck Converter           ║
+║         │    └──► 5V rail (optional backup)  ║
+║         │                                    ║
+║         └──► Direct to Inductive Sensor VCC  ║
+║              (LJ12A3 needs 6-36V)            ║
+║              Sensor GND ──► ESP32 GND ✅     ║
+╠══════════════════════════════════════════════╣
+║   KCD11 Rocker Switch — Main Power On/Off    ║
+╚══════════════════════════════════════════════╝
 ```
 
-> ⚠️ **Critical:** Metal detector GND and ESP32 GND **must share common ground**
-> for correct signal reading on GPIO 13.
+> ⚠️ **Critical:** Inductive sensor GND and ESP32 GND **must share
+> common ground** for correct signal reading on GPIO 13.
+
+> ⚠️ **Voltage Divider Required:** Sensor output is 12V — use
+> 20kΩ + 10kΩ voltage divider before GPIO 13 to bring it down to ~3V.
 
 ---
 
 ## 📚 Libraries Required
 
-Install via Arduino IDE **Library Manager** (`Sketch` → `Include Library` → `Manage Libraries`):
+Install via Arduino IDE **Library Manager**
+(`Sketch` → `Include Library` → `Manage Libraries`):
 
 | Library | Install Name | Purpose |
 |---------|-------------|---------|
@@ -190,11 +214,12 @@ Install via Arduino IDE **Library Manager** (`Sketch` → `Include Library` → 
 <br/>
 
 - Wire all components per the pin table above
-- Connect metal detector **positive** to 9V battery
-- Connect metal detector **GND** to ESP32 GND (common ground!)
-- Connect everything else to USB/power bank via ESP32
-- Mount ultrasonic sensors **above each bin facing straight down**
-- Ensure stepper and servo have adequate **5V supply**
+- Connect inductive sensor to 2S 18650 battery pack (7.4V)
+- Add **20kΩ + 10kΩ voltage divider** between sensor OUT and GPIO 13
+- Connect sensor GND to ESP32 GND (common ground!)
+- Connect everything else to USB power via ESP32
+- Mount HC-SR04 sensors **above each bin facing straight down**
+- Add KCD11 rocker switch on battery positive line for easy power control
 
 </details>
 
@@ -260,6 +285,7 @@ const int RAIN_WET_OFF       = 3200; // moisture dry threshold
 - Open **Serial Monitor** at `115200 baud`
 - Confirm WiFi connection message
 - Confirm ThingSpeak response code **200**
+- Flip the KCD11 rocker switch to power on battery side
 - Test by placing objects in the bin input
 
 </details>
@@ -269,7 +295,8 @@ const int RAIN_WET_OFF       = 3200; // moisture dry threshold
 ## ⚙️ How It Works
 
 ### 1. 👁️ Object Detection
-IR sensor at bin input detects waste. When signal goes **LOW** → sort cycle begins.
+IR obstacle sensor at bin input detects waste.
+When signal goes **LOW** → sort cycle begins.
 
 ### 2. 🧠 Smart Classification
 ```
@@ -278,6 +305,7 @@ Object detected by IR sensor
            ▼
   Metal flag set within          ──YES──► 🔩 METAL bin
   last 2 seconds?
+  (Inductive sensor NPN NO)
            │ NO
            ▼
   Rain sensor reading             ──YES──► 💧 WET bin
@@ -287,39 +315,40 @@ Object detected by IR sensor
                                            📦 DRY bin
 ```
 
-> 💡 **Metal Memory System:** The metal sensor is at the **top** of the bin,
-> IR sensor at the **bottom**. When metal object passes the top sensor,
-> a flag is set for 2 seconds — so by the time IR triggers at the bottom,
-> metal is still correctly identified.
+> 💡 **Metal Memory System:** The inductive proximity sensor (LJ12A3)
+> is mounted at the **top** of the bin, IR sensor at the **bottom**.
+> When a metal object passes the top sensor, a flag is set for 2 seconds
+> — so by the time IR triggers at the bottom, metal is still correctly
+> identified and routed.
 
 ### 3. ⚙️ Sorting Sequence
 ```
-1. Stepper rotates CW to target position
-   - Dry  →   0° (home)
-   - Wet  → 120°
-   - Metal→ 240°
-2. Servo opens gate (1.2 seconds)
-3. Item drops into correct bin
-4. Servo closes gate
-5. Stepper returns CCW to home
+1. Stepper motor rotates CW to target position:
+   - Dry   →   0° (home position)
+   - Wet   → 120° CW
+   - Metal → 240° CW
+2. SG90 servo opens gate (1.2 seconds)
+3. Waste item drops into correct bin
+4. Servo closes gate (returns to 10°)
+5. Stepper returns CCW back to home (0°)
 ```
 
 ### 4. 📡 Bin Level Monitoring
-- 3 ultrasonic readings taken per bin
-- **Median of 3** used to eliminate false readings
-- Distance converted to fill percentage
+- HC-SR04 takes **3 ultrasonic readings** per bin
+- **Median of 3** used to eliminate false/noisy readings
+- Distance converted to fill percentage (0–100%)
 
 ### 5. 🔔 Alarm System
 ```
 Every 15 seconds:
-   Read all 3 bin levels
-         │
-         ▼
-   Any bin ≥ 55%? ──YES──► Buzzer beeps 3× 🔔
-         │                  Upload alarm=1 to ThingSpeak
-         │ NO
-         ▼
-   Upload alarm=0 to ThingSpeak
+   Read all 3 bin levels via HC-SR04
+              │
+              ▼
+   Any bin ≥ 55%? ──YES──► Active buzzer beeps 3× 🔔
+              │              Upload alarm = 1 to ThingSpeak
+              │ NO
+              ▼
+         Upload alarm = 0 to ThingSpeak ✅
 ```
 
 ### 6. ☁️ ThingSpeak Upload
@@ -339,14 +368,16 @@ Every **15 seconds**, ESP32 sends to cloud:
 
 | Problem | Likely Cause | Fix |
 |---------|-------------|-----|
-| Metal not sorting | Flag timing issue | Check GPIO 13 wiring and common GND |
+| Metal not sorting | Flag timing issue | Check GPIO 13 wiring + voltage divider |
+| Metal always triggers | No voltage divider | Add 20kΩ+10kΩ divider on sensor OUT |
 | Stepper wrong position | Lost home position | Power cycle to rehome stepper |
-| Bins always 0% | Ultrasonic not working | Check TRIG/ECHO pin connections |
+| Bins always show 0% | HC-SR04 not working | Check TRIG/ECHO pin connections |
 | ThingSpeak error -1 | WiFi disconnected | Check SSID and password |
-| Buzzer always ON | Active-low confusion | Verify GPIO 21, check buzzer type |
-| Rain always wet | Threshold too high | Lower `RAIN_WET_ON` value in code |
+| Buzzer always ON | Active-low confusion | Verify GPIO 21 wiring |
+| Rain always wet | Threshold too high | Lower `RAIN_WET_ON` value |
 | Servo not moving | Wrong PWM range | Adjust `SERVO_MIN_US`/`SERVO_MAX_US` |
-| WiFi won't connect | Wrong credentials | Double check SSID/password in code |
+| System won't start | Battery dead | Check 18650 cells with multimeter |
+| Inductive sensor no detect | Voltage too low | Ensure 7.4V+ from battery pack |
 
 </details>
 
@@ -354,9 +385,8 @@ Every **15 seconds**, ESP32 sends to cloud:
 
 ## 📄 License
 
-This project is released under the **MIT License** — free to use, modify and share!
-
-See [LICENSE](LICENSE) for full details.
+This project is released under the **MIT License** — free to use,
+modify and share! See [LICENSE](LICENSE) for full details.
 
 ---
 
@@ -367,13 +397,13 @@ See [LICENSE](LICENSE) for full details.
 - **CheapStepper Library** — [tyhenry/CheapStepper](https://github.com/tyhenry/CheapStepper)
 - **ESP32Servo Library** — [madhephaestus/ESP32Servo](https://github.com/madhephaestus/ESP32Servo)
 - **Shields.io Badges** — [shields.io](https://shields.io)
-- **Built with** — Arduino framework + ESP32
+- **Built with** — Arduino framework + ESP32 NodeMCU
 
 ---
 
 <div align="center">
 
-<img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=16&pause=1000&color=00C853&center=true&vCenter=true&width=500&lines=Made+with+❤️+by+Atalauddin;University+IoT+Project+🎓;Bangladesh+%F0%9F%87%A7%F0%9F%87%A9" alt="Footer" />
+<img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=16&pause=1000&color=00C853&center=true&vCenter=true&width=500&lines=Made+with+❤️+by+Atalauddin;University+IoT+Project+🎓;Bangladesh+🇧🇩" alt="Footer" />
 
 <br/>
 
