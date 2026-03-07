@@ -110,7 +110,7 @@ which requires higher voltage.
                ▼     ▼     ▼
             💧 WET 📦 DRY 🔩 METAL
 ```
-
+> 🖥️ **[View Interactive Diagram](Diagram.html)**
 ---
 
 ## 🔧 Hardware Components
