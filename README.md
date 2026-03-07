@@ -1,16 +1,16 @@
-# ESP32 Smart Waste Sorter
+# ESP32 Smart Waste Sorter ♻️🤖
 
 An IoT-enabled smart waste sorting system that automatically classifies and routes waste into wet, dry, and metal bins. Built on the ESP32 microcontroller with WiFi connectivity for cloud monitoring via ThingSpeak.
 
 ---
 
-## Project Description
+## Project Description 📝
 
 This project implements an autonomous waste sorting mechanism that detects incoming waste, classifies it using metal detection and moisture sensing, and directs it to the appropriate bin using a stepper motor and servo-controlled gate. Bin fill levels are monitored in real time with ultrasonic sensors, and data is uploaded to ThingSpeak for remote monitoring and alerting.
 
 ---
 
-## Features
+## Features 🌟
 
 | Feature | Description |
 |---------|-------------|
@@ -25,7 +25,7 @@ This project implements an autonomous waste sorting mechanism that detects incom
 
 ---
 
-## Hardware Components
+## Hardware Components 🔧
 
 | Component | Purpose |
 |-----------|---------|
@@ -41,7 +41,7 @@ This project implements an autonomous waste sorting mechanism that detects incom
 
 ---
 
-## Pin Connections
+## Pin Connections 🧩
 
 | Component | GPIO | Notes |
 |-----------|------|-------|
@@ -63,7 +63,7 @@ This project implements an autonomous waste sorting mechanism that detects incom
 
 ---
 
-## Libraries Required
+## Libraries Required 📚
 
 Install via Arduino IDE **Library Manager** or PlatformIO:
 
@@ -76,7 +76,7 @@ Install via Arduino IDE **Library Manager** or PlatformIO:
 
 ---
 
-## Setup Instructions
+## Setup Instructions 🚀
 
 1. **Hardware assembly**
    - Wire components per the pin table above.
@@ -111,7 +111,7 @@ Install via Arduino IDE **Library Manager** or PlatformIO:
 
 ---
 
-## How It Works
+## How It Works ⚙️
 
 1. **Object detection**  
    An IR sensor at the input detects waste. When it goes LOW, the system starts a sort cycle.
@@ -136,6 +136,6 @@ Install via Arduino IDE **Library Manager** or PlatformIO:
 
 ---
 
-## License
+## License 📄
 
 MIT
