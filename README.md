@@ -138,4 +138,4 @@ Install via Arduino IDE **Library Manager** or PlatformIO:
 
 ## License
 
-MIT (or your preferred license)
+MIT
