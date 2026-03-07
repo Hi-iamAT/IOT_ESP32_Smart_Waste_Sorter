@@ -248,7 +248,7 @@ Every **15 seconds**, ESP32 sends:
 
 Monitor your bins live at:
 ```
-https://thingspeak.com/channels/YOUR_CHANNEL_ID
+https://thingspeak.mathworks.com/channels/3245840
 ```
 
 ---
