@@ -3,6 +3,12 @@
 An IoT-enabled smart waste sorting system that automatically classifies and routes waste into wet, dry, and metal bins. Built on the ESP32 microcontroller with WiFi connectivity for cloud monitoring via ThingSpeak.
 
 ---
+![Platform](https://img.shields.io/badge/Platform-ESP32-blue?style=for-the-badge&logo=espressif)
+![Framework](https://img.shields.io/badge/Framework-Arduino-00979D?style=for-the-badge&logo=arduino)
+![IoT](https://img.shields.io/badge/IoT-ThingSpeak-orange?style=for-the-badge)
+![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
+![Language](https://img.shields.io/badge/Language-C%2B%2B-red?style=for-the-badge&logo=cplusplus)
+![Bins](https://img.shields.io/badge/Bins-Wet%20%7C%20Dry%20%7C%20Metal-purple?style=for-the-badge)
 
 ## Project Description 📝
 
