@@ -110,7 +110,7 @@ which requires higher voltage.
                ▼     ▼     ▼
             💧 WET 📦 DRY 🔩 METAL
 ```
-> 🖥️ **[View Interactive Diagram](Diagram.html)**
+
 ---
 
 ## 🔧 Hardware Components
@@ -155,6 +155,10 @@ which requires higher voltage.
 | **📡 Ultrasonic Dry ECHO** | 14 | Dry bin echo |
 | **📡 Ultrasonic Metal TRIG** | 33 | Metal bin trigger |
 | **📡 Ultrasonic Metal ECHO** | 27 | Metal bin echo |
+
+---
+
+> ⚡ [Full Wiring Instructions](Full_Wiring.html)
 
 ---
 
