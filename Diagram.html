@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ESP32 Smart Waste Sorter — System Diagram</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #050a0e;
+    --panel: #0a1520;
+    --border: #0d2a3a;
+    --glow-green: #00ff88;
+    --glow-blue: #00b4ff;
+    --glow-orange: #ff8c00;
+    --glow-red: #ff3355;
+    --glow-purple: #c84bff;
+    --glow-yellow: #ffe600;
+    --glow-cyan: #00fff5;
+    --text: #c8e6f0;
+    --text-dim: #4a7a8a;
+    --metal: #a8c0cc;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    font-family: 'Share Tech Mono', monospace;
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+    background-image:
+      radial-gradient(ellipse at 20% 20%, rgba(0,180,255,0.04) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 80%, rgba(0,255,136,0.04) 0%, transparent 60%),
+      linear-gradient(rgba(0,180,255,0.015) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,180,255,0.015) 1px, transparent 1px);
+    background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    text-align: center;
+    padding: 48px 24px 32px;
+    position: relative;
+  }
+  header::after {
+    content: '';
+    display: block;
+    margin: 24px auto 0;
+    width: 60%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--glow-blue), var(--glow-green), transparent);
+  }
+  .title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(1.4rem, 4vw, 2.6rem);
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    background: linear-gradient(135deg, var(--glow-blue), var(--glow-green));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none;
+    filter: drop-shadow(0 0 20px rgba(0,180,255,0.4));
+  }
+  .subtitle {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1rem;
+    color: var(--text-dim);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-top: 8px;
+  }
+
+  /* ── MAIN DIAGRAM ── */
+  .diagram-wrapper {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px;
+  }
+
+  /* ── NODE BASE ── */
+  .node {
+    border-radius: 10px;
+    padding: 12px 18px;
+    text-align: center;
+    position: relative;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: default;
+  }
+  .node:hover {
+    transform: translateY(-3px) scale(1.03);
+  }
+  .node .icon { font-size: 1.4rem; display: block; margin-bottom: 4px; }
+  .node .label { font-size: 0.75rem; color: var(--text-dim); display: block; margin-top: 2px; font-family: 'Share Tech Mono', monospace; }
+
+  .node-esp32 {
+    background: linear-gradient(135deg, #0a2040, #0d3060);
+    border: 2px solid var(--glow-blue);
+    box-shadow: 0 0 25px rgba(0,180,255,0.3), inset 0 0 20px rgba(0,180,255,0.05);
+    color: var(--glow-blue);
+    padding: 18px 28px;
+    font-size: 1.1rem;
+  }
+  .node-sensor {
+    background: linear-gradient(135deg, #0a2010, #0d3020);
+    border: 1.5px solid var(--glow-green);
+    box-shadow: 0 0 15px rgba(0,255,136,0.2);
+    color: var(--glow-green);
+  }
+  .node-actuator {
+    background: linear-gradient(135deg, #201000, #3a1f00);
+    border: 1.5px solid var(--glow-orange);
+    box-shadow: 0 0 15px rgba(255,140,0,0.2);
+    color: var(--glow-orange);
+  }
+  .node-cloud {
+    background: linear-gradient(135deg, #1a0030, #2d0050);
+    border: 1.5px solid var(--glow-purple);
+    box-shadow: 0 0 15px rgba(200,75,255,0.25);
+    color: var(--glow-purple);
+  }
+  .node-power {
+    background: linear-gradient(135deg, #201500, #302000);
+    border: 1.5px solid var(--glow-yellow);
+    box-shadow: 0 0 15px rgba(255,230,0,0.2);
+    color: var(--glow-yellow);
+  }
+  .node-bin-wet {
+    background: linear-gradient(135deg, #001530, #002050);
+    border: 2px solid var(--glow-cyan);
+    box-shadow: 0 0 20px rgba(0,255,245,0.25);
+    color: var(--glow-cyan);
+    padding: 16px 20px;
+  }
+  .node-bin-dry {
+    background: linear-gradient(135deg, #201500, #302500);
+    border: 2px solid var(--glow-orange);
+    box-shadow: 0 0 20px rgba(255,140,0,0.25);
+    color: var(--glow-orange);
+    padding: 16px 20px;
+  }
+  .node-bin-metal {
+    background: linear-gradient(135deg, #101020, #1a1a30);
+    border: 2px solid var(--metal);
+    box-shadow: 0 0 20px rgba(168,192,204,0.25);
+    color: var(--metal);
+    padding: 16px 20px;
+  }
+
+  /* ── SECTION PANELS ── */
+  .section-panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .section-panel::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+  .panel-sensors::before { background: linear-gradient(90deg, transparent, var(--glow-green), transparent); }
+  .panel-brain::before   { background: linear-gradient(90deg, transparent, var(--glow-blue), transparent); }
+  .panel-act::before     { background: linear-gradient(90deg, transparent, var(--glow-orange), transparent); }
+  .panel-bins::before    { background: linear-gradient(90deg, var(--glow-cyan), var(--glow-orange), var(--metal)); }
+  .panel-power::before   { background: linear-gradient(90deg, transparent, var(--glow-yellow), transparent); }
+
+  .panel-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .panel-title.green  { color: var(--glow-green); }
+  .panel-title.blue   { color: var(--glow-blue); }
+  .panel-title.orange { color: var(--glow-orange); }
+  .panel-title.multi  { background: linear-gradient(90deg, var(--glow-cyan), var(--glow-orange), var(--metal)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .panel-title.yellow { color: var(--glow-yellow); }
+  .panel-title::before {
+    content: '';
+    display: inline-block;
+    width: 20px; height: 2px;
+    background: currentColor;
+    flex-shrink: 0;
+  }
+
+  /* ── GRID LAYOUTS ── */
+  .grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+
+  @media (max-width: 768px) {
+    .grid-5 { grid-template-columns: repeat(3, 1fr); }
+    .grid-3 { grid-template-columns: 1fr; }
+    .grid-2 { grid-template-columns: 1fr; }
+  }
+
+  /* ── FLOW ARROWS ── */
+  .flow-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 0;
+    color: var(--text-dim);
+    font-size: 1.4rem;
+    position: relative;
+  }
+  .flow-arrow .arrow-line {
+    flex: 1;
+    height: 1px;
+    max-width: 80px;
+  }
+  .flow-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    color: var(--text-dim);
+    text-align: center;
+    margin: -4px 0 4px;
+    text-transform: uppercase;
+  }
+
+  .arrow-down {
+    text-align: center;
+    font-size: 1.8rem;
+    color: var(--text-dim);
+    padding: 4px 0;
+    animation: pulse-arrow 2s ease-in-out infinite;
+  }
+  @keyframes pulse-arrow {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+
+  /* ── CENTER BRAIN ── */
+  .brain-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    margin: 8px 0;
+  }
+  .wifi-line {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.7rem;
+    color: var(--glow-purple);
+    letter-spacing: 0.1em;
+  }
+  .wifi-line .dots {
+    display: flex;
+    gap: 3px;
+    align-items: center;
+  }
+  .wifi-line .dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--glow-purple);
+    animation: blink 1.2s ease-in-out infinite;
+  }
+  .wifi-line .dot:nth-child(2) { animation-delay: 0.2s; }
+  .wifi-line .dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes blink {
+    0%, 100% { opacity: 0.2; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.2); }
+  }
+
+  /* ── PIN TABLE ── */
+  .pin-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .pin-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.78rem;
+  }
+  .pin-num {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    background: var(--glow-blue);
+    color: #000;
+    padding: 2px 6px;
+    border-radius: 4px;
+    min-width: 36px;
+    text-align: center;
+  }
+  .pin-name { color: var(--text); flex: 1; }
+  .pin-type { font-size: 0.65rem; color: var(--text-dim); }
+
+  /* ── CLASSIFICATION FLOW ── */
+  .classify-flow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+  .cf-box {
+    padding: 10px 24px;
+    border-radius: 8px;
+    text-align: center;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    min-width: 220px;
+  }
+  .cf-start {
+    background: rgba(0,180,255,0.1);
+    border: 1px solid var(--glow-blue);
+    color: var(--glow-blue);
+  }
+  .cf-decision {
+    background: rgba(255,230,0,0.08);
+    border: 1px solid var(--glow-yellow);
+    color: var(--glow-yellow);
+    border-radius: 4px;
+    transform: rotate(0deg);
+  }
+  .cf-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+    padding: 4px 0;
+  }
+  .cf-arrow-line {
+    width: 2px;
+    height: 24px;
+    background: var(--text-dim);
+  }
+  .cf-branch {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 32px;
+    width: 100%;
+    margin-top: 0;
+  }
+  .cf-branch-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .cf-yes {
+    font-size: 0.65rem;
+    color: var(--glow-green);
+    letter-spacing: 0.1em;
+  }
+  .cf-no {
+    font-size: 0.65rem;
+    color: var(--glow-red);
+    letter-spacing: 0.1em;
+  }
+
+  /* ── LEGEND ── */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 8px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.72rem;
+    color: var(--text-dim);
+  }
+  .legend-dot {
+    width: 10px; height: 10px;
+    border-radius: 2px;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 32px 24px;
+    color: var(--text-dim);
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    border-top: 1px solid var(--border);
+    margin-top: 24px;
+  }
+  footer span {
+    background: linear-gradient(90deg, var(--glow-blue), var(--glow-green));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ── SCAN LINE EFFECT ── */
+  body::after {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.03) 2px,
+      rgba(0,0,0,0.03) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="title">♻️ ESP32 SMART WASTE SORTER</div>
+  <div class="subtitle">System Architecture &amp; Wiring Diagram — v1.0</div>
+</header>
+
+<div class="diagram-wrapper">
+
+  <!-- SENSORS ROW -->
+  <div class="section-panel panel-sensors">
+    <div class="panel-title green">📡 Input Sensors</div>
+    <div class="grid-5">
+      <div class="node node-sensor">
+        <span class="icon">👁️</span>
+        IR Sensor
+        <span class="label">GPIO 32</span>
+      </div>
+      <div class="node node-sensor">
+        <span class="icon">🔩</span>
+        Inductive<br/>Proximity
+        <span class="label">GPIO 13</span>
+      </div>
+      <div class="node node-sensor">
+        <span class="icon">💧</span>
+        Rain/Moisture
+        <span class="label">GPIO 35 (AO)</span>
+      </div>
+      <div class="node node-sensor">
+        <span class="icon">📡</span>
+        Ultrasonic ×3
+        <span class="label">TRIG/ECHO pairs</span>
+      </div>
+      <div class="node node-sensor">
+        <span class="icon">🌡️</span>
+        HC-SR04
+        <span class="label">26/12 · 25/14 · 33/27</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow-down">⬇</div>
+  <div class="flow-label">sensor signals</div>
+
+  <!-- ESP32 BRAIN -->
+  <div class="section-panel panel-brain">
+    <div class="panel-title blue">🧠 Processing Unit</div>
+    <div class="brain-row">
+      <div class="node node-esp32">
+        <span class="icon">🧠</span>
+        ESP32-S NodeMCU
+        <span class="label">Main Controller · WiFi · ADC · PWM · GPIO</span>
+      </div>
+      <div class="wifi-line">
+        ── WiFi ──
+        <div class="dots">
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+        </div>
+      </div>
+      <div class="node node-cloud">
+        <span class="icon">☁️</span>
+        ThingSpeak
+        <span class="label">IoT Cloud · Every 15s</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow-down">⬇</div>
+  <div class="flow-label">control signals</div>
+
+  <!-- ACTUATORS -->
+  <div class="section-panel panel-act">
+    <div class="panel-title orange">⚙️ Actuators</div>
+    <div class="grid-3">
+      <div class="node node-actuator">
+        <span class="icon">⚙️</span>
+        28BYJ-48 Stepper
+        <span class="label">+ ULN2003 · GPIO 4,2,18,19</span>
+      </div>
+      <div class="node node-actuator">
+        <span class="icon">🔄</span>
+        SG90 Servo
+        <span class="label">Gate Control · GPIO 23</span>
+      </div>
+      <div class="node node-actuator">
+        <span class="icon">🔔</span>
+        Active Buzzer
+        <span class="label">Active-Low · GPIO 21</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow-down">⬇</div>
+  <div class="flow-label">waste routed to</div>
+
+  <!-- OUTPUT BINS -->
+  <div class="section-panel panel-bins">
+    <div class="panel-title multi">🗑️ Output Bins</div>
+    <div class="grid-3">
+      <div class="node node-bin-wet">
+        <span class="icon">💧</span>
+        WET BIN
+        <span class="label">Stepper: 120° CW</span>
+        <span class="label" style="color:var(--glow-cyan);margin-top:4px">Organic Waste</span>
+      </div>
+      <div class="node node-bin-dry">
+        <span class="icon">📦</span>
+        DRY BIN
+        <span class="label">Stepper: 0° (Home)</span>
+        <span class="label" style="color:var(--glow-orange);margin-top:4px">Recyclable Waste</span>
+      </div>
+      <div class="node node-bin-metal">
+        <span class="icon">🔩</span>
+        METAL BIN
+        <span class="label">Stepper: 240° CW</span>
+        <span class="label" style="color:var(--metal);margin-top:4px">Metal / Conductive</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- POWER SETUP -->
+  <div class="section-panel panel-power">
+    <div class="panel-title yellow">⚡ Power Supply</div>
+    <div class="grid-2">
+      <div class="node node-power">
+        <span class="icon">💻</span>
+        USB / Power Bank (5V)
+        <span class="label">ESP32 · Stepper · Servo · Sensors</span>
+      </div>
+      <div class="node node-power">
+        <span class="icon">🔋</span>
+        2S 18650 Pack (7.4V)
+        <span class="label">LM2596 Buck → Inductive Sensor</span>
+        <span class="label" style="color:var(--glow-red);margin-top:4px">⚠ Common GND Required!</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CLASSIFICATION LOGIC -->
+  <div class="section-panel" style="border-color:#1a2a1a;">
+    <div class="panel-title green">🧠 Classification Logic</div>
+    <div style="display:flex; gap:32px; flex-wrap:wrap; align-items:flex-start; justify-content:center;">
+
+      <div class="classify-flow">
+        <div class="cf-box cf-start">👁️ IR Sensor Triggered</div>
+        <div class="cf-arrow"><div class="cf-arrow-line"></div></div>
+        <div class="cf-box cf-decision">🔩 Metal Flag Set?<br/><small style="font-size:0.7rem;opacity:0.7">(within 2 sec)</small></div>
+        <div style="display:flex;gap:48px;align-items:flex-start;margin-top:0;">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+            <div class="cf-arrow"><div class="cf-arrow-line" style="background:var(--glow-green)"></div></div>
+            <div class="cf-yes">✓ YES</div>
+            <div class="cf-box" style="background:rgba(168,192,204,0.1);border:1px solid var(--metal);color:var(--metal);min-width:110px;padding:8px 12px;">🔩 METAL BIN</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+            <div class="cf-arrow"><div class="cf-arrow-line" style="background:var(--glow-red)"></div></div>
+            <div class="cf-no">✗ NO</div>
+            <div class="cf-box cf-decision" style="min-width:130px;">💧 Rain Sensor<br/>Wet?</div>
+            <div style="display:flex;gap:24px;margin-top:0;">
+              <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+                <div class="cf-arrow"><div class="cf-arrow-line" style="background:var(--glow-green)"></div></div>
+                <div class="cf-yes">✓ YES</div>
+                <div class="cf-box" style="background:rgba(0,255,245,0.08);border:1px solid var(--glow-cyan);color:var(--glow-cyan);min-width:90px;padding:8px 10px;">💧 WET BIN</div>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+                <div class="cf-arrow"><div class="cf-arrow-line" style="background:var(--glow-red)"></div></div>
+                <div class="cf-no">✗ NO</div>
+                <div class="cf-box" style="background:rgba(255,140,0,0.08);border:1px solid var(--glow-orange);color:var(--glow-orange);min-width:90px;padding:8px 10px;">📦 DRY BIN</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PIN TABLE -->
+      <div style="flex:1;min-width:260px;">
+        <div style="font-family:'Orbitron',sans-serif;font-size:0.65rem;letter-spacing:0.15em;color:var(--glow-blue);margin-bottom:10px;">🧩 GPIO PINOUT</div>
+        <div class="pin-grid">
+          <div class="pin-row"><span class="pin-num">4</span><span class="pin-name">Stepper IN1</span></div>
+          <div class="pin-row"><span class="pin-num">2</span><span class="pin-name">Stepper IN2</span></div>
+          <div class="pin-row"><span class="pin-num">18</span><span class="pin-name">Stepper IN3</span></div>
+          <div class="pin-row"><span class="pin-num">19</span><span class="pin-name">Stepper IN4</span></div>
+          <div class="pin-row"><span class="pin-num">23</span><span class="pin-name">Servo Signal</span></div>
+          <div class="pin-row"><span class="pin-num">32</span><span class="pin-name">IR Sensor OUT</span></div>
+          <div class="pin-row"><span class="pin-num">13</span><span class="pin-name">Metal Detector</span></div>
+          <div class="pin-row"><span class="pin-num">35</span><span class="pin-name">Rain Sensor AO</span></div>
+          <div class="pin-row"><span class="pin-num">21</span><span class="pin-name">Buzzer</span></div>
+          <div class="pin-row"><span class="pin-num">26/12</span><span class="pin-name">Ultrasonic WET</span></div>
+          <div class="pin-row"><span class="pin-num">25/14</span><span class="pin-name">Ultrasonic DRY</span></div>
+          <div class="pin-row"><span class="pin-num">33/27</span><span class="pin-name">Ultrasonic MET</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEGEND -->
+  <div class="legend" style="margin-bottom:16px;">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--glow-green)"></div>Sensors</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--glow-blue)"></div>Processing</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--glow-orange)"></div>Actuators</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--glow-purple)"></div>Cloud IoT</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--glow-yellow)"></div>Power</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--glow-cyan)"></div>Wet Bin</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--metal)"></div>Metal Bin</div>
+  </div>
+
+</div>
+
+<footer>
+  <span>ESP32 Smart Waste Sorter</span> — System Architecture Diagram<br/>
+  University IoT Project 🎓 · Made by Atalauddin · Bangladesh 🇧🇩
+</footer>
+
+</body>
+</html>
