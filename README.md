@@ -158,7 +158,7 @@ which requires higher voltage.
 
 ---
 
-> ⚡ [Full Wiring Instructions](Full_Wiring.html)
+> ## 📋 [Click Here → Full Wiring Instructions & Circuit Diagram](Full_Wiring.html)
 
 ---
 
@@ -364,6 +364,12 @@ Every **15 seconds**, ESP32 sends to cloud:
 
 ---
 
+## 📊 Live Dashboard
+
+> 🌐 **[View Live ThingSpeak Data →](https://thingspeak.mathworks.com/channels/3245840)**
+
+---
+
 ## 🐛 Troubleshooting
 
 <details>
@@ -391,13 +397,13 @@ Every **15 seconds**, ESP32 sends to cloud:
 
 <div align="center">
 
-| # | Photo | View |
-|---|-------|------|
-| 1 | 🖥️ Full Setup | [🔍 Click to View](Project_images/full_view.jpeg) |
-| 2 | 🗑️ Three Bins | [🔍 Click to View](Project_images/3_bins.jpeg) |
-| 3 | 📦 Bin Close-up | [🔍 Click to View](Project_images/bin.jpeg) |
-| 4 | ⚙️ Stepper Motor | [🔍 Click to View](Project_images/stepper_motor.jpeg) |
-| 5 | 🔌 Wiring | [🔍 Click to View](Project_images/wiring.jpeg) |
+| 🖥️ Full Setup | 🗑️ Three Bins | 🔌 Wiring |
+|---|---|---|
+| [<img src="Project_images/full_view.jpeg" width="250"/>](Project_images/full_view.jpeg) | [<img src="Project_images/3_bins.jpeg" width="250"/>](Project_images/3_bins.jpeg) | [<img src="Project_images/wiring.jpeg" width="250"/>](Project_images/wiring.jpeg) |
+
+| 📦 Bin Close-up | ⚙️ Stepper Motor |
+|---|---|
+| [<img src="Project_images/bin.jpeg" width="250"/>](Project_images/bin.jpeg) | [<img src="Project_images/stepper_motor.jpeg" width="250"/>](Project_images/stepper_motor.jpeg) |
 
 </div>
 
@@ -446,8 +452,8 @@ modify and share! See [LICENSE](LICENSE) for full details.
 
 <br/>
 
-![GitHub repo size](https://img.shields.io/github/repo-size/Hi-iamAT/IOT_ESP32-Smart-Waste-Sorter?style=flat-square)
-![GitHub last commit](https://img.shields.io/github/last-commit/Hi-iamAT/IOT_ESP32-Smart-Waste-Sorter?style=flat-square)
-![GitHub stars](https://img.shields.io/github/stars/Hi-iamAT/IOT_ESP32-Smart-Waste-Sorter?style=flat-square)
+![GitHub repo size](https://img.shields.io/github/repo-size/Hi-iamAT/IOT_ESP32_Smart_Waste_Sorter?style=flat-square)
+![GitHub last commit](https://img.shields.io/github/last-commit/Hi-iamAT/IOT_ESP32_Smart_Waste_Sorter?style=flat-square)
+![GitHub stars](https://img.shields.io/github/stars/Hi-iamAT/IOT_ESP32_Smart_Waste_Sorter?style=flat-square)
 
 </div>
