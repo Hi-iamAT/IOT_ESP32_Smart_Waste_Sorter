@@ -393,11 +393,11 @@ Every **15 seconds**, ESP32 sends to cloud:
 
 | Full Setup | Bins | Wiring |
 |-----------|------|--------|
-| <img src="Project_images/full_view.jpeg" width="250" height="200" object-fit="cover"/> | <img src="Project_images/3_bins.jpeg" width="250" height="200"/> | <img src="Project_images/wiring.jpeg" width="250" height="200"/> |
+| <img src="Project_images/full_view.jpeg" style="width:250px;height:200px;object-fit:cover;"/> | <img src="Project_images/3_bins.jpeg" style="width:250px;height:200px;object-fit:cover;"/> | <img src="Project_images/wiring.jpeg" style="width:250px;height:200px;object-fit:cover;"/> |
 
 | Bin Close-up | Stepper Motor |
 |-------------|---------------|
-| <img src="Project_images/bin.jpeg" width="250" height="200"/> | <img src="Project_images/stepper_motor.jpeg" width="250" height="200"/> |
+| <img src="Project_images/bin.jpeg" style="width:250px;height:200px;object-fit:cover;"/> | <img src="Project_images/stepper_motor.jpeg" style="width:250px;height:200px;object-fit:cover;"/> |
 
 </div>
 
