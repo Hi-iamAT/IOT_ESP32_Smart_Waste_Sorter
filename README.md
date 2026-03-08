@@ -387,6 +387,32 @@ Every **15 seconds**, ESP32 sends to cloud:
 
 ---
 
+## 📸 Project Photos
+
+<div align="center">
+
+| Full Setup | Bins | Wiring |
+|-----------|------|--------|
+| ![Full Setup](images/full_view.jpeg) | ![Bins](images/3_bins.jpeg) | ![Wiring](images/wiring.jpeg) |
+
+| Bin Close-up | Stepper Motor |
+|-------------|---------------|
+| ![Bin](images/bin.jpeg) | ![Stepper](images/stepper_motor.jpeg) |
+
+</div>
+
+---
+
+## 🎥 Demo Videos
+
+> 📱 Click any link below to watch the demo
+
+| Test | Dry Waste | Wet Waste | Metal Waste |
+|------|-----------|-----------|-------------|
+| [▶ Startup Test](videos/demo_start_test.mp4) | [▶ Dry Demo](videos/demo_dry.mp4) | [▶ Wet Demo](videos/demo_wet.mp4) | [▶ Metal Demo](videos/demo_metal.mp4) |
+
+---
+
 ## 📄 License
 
 This project is released under the **MIT License** — free to use,
