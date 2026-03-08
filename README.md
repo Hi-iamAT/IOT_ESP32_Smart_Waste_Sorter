@@ -393,11 +393,11 @@ Every **15 seconds**, ESP32 sends to cloud:
 
 | Full Setup | Bins | Wiring |
 |-----------|------|--------|
-| ![Full Setup](images/full_view.jpeg) | ![Bins](images/3_bins.jpeg) | ![Wiring](images/wiring.jpeg) |
+| ![Full Setup](Project_images/full_view.jpeg) | ![Bins](Project_images/3_bins.jpeg) | ![Wiring](Project_images/wiring.jpeg) |
 
 | Bin Close-up | Stepper Motor |
 |-------------|---------------|
-| ![Bin](images/bin.jpeg) | ![Stepper](images/stepper_motor.jpeg) |
+| ![Bin](Project_images/bin.jpeg) | ![Stepper](Project_images/stepper_motor.jpeg) |
 
 </div>
 
@@ -409,7 +409,7 @@ Every **15 seconds**, ESP32 sends to cloud:
 
 | Test | Dry Waste | Wet Waste | Metal Waste |
 |------|-----------|-----------|-------------|
-| [▶ Startup Test](videos/demo_start_test.mp4) | [▶ Dry Demo](videos/demo_dry.mp4) | [▶ Wet Demo](videos/demo_wet.mp4) | [▶ Metal Demo](videos/demo_metal.mp4) |
+| [▶ Startup Test](Project_videos/demo_start_test.mp4) | [▶ Dry Demo](Project_videos/demo_dry.mp4) | [▶ Wet Demo](Project_videos/demo_wet.mp4) | [▶ Metal Demo](Project_videos/demo_metal.mp4) |
 
 ---
 
