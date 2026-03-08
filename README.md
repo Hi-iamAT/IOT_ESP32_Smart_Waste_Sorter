@@ -407,17 +407,12 @@ Every **15 seconds**, ESP32 sends to cloud:
 
 <div align="center">
 
-### 🔧 Startup Test
-https://github.com/user-attachments/assets/656f8eee-1423-4c10-8c99-548ce23c34b0
-
-### 📦 Dry Waste Sorting
-https://github.com/user-attachments/assets/8a9db2e8-9914-49c1-a0ae-66639b63ad09
-
-### 🔩 Metal Waste Sorting
-https://github.com/user-attachments/assets/f8677811-918f-45ea-9a59-8e8aa5a4d01e
-
-### 💧 Wet Waste Sorting
-https://github.com/user-attachments/assets/1a766f5a-52a2-4b8c-8a09-d119b750a81f
+| Video | Watch |
+|-------|-------|
+| 🔧 Startup Test | [▶ Click to Watch](https://github.com/user-attachments/assets/656f8eee-1423-4c10-8c99-548ce23c34b0) |
+| 📦 Dry Waste Sorting | [▶ Click to Watch](https://github.com/user-attachments/assets/8a9db2e8-9914-49c1-a0ae-66639b63ad09) |
+| 🔩 Metal Waste Sorting | [▶ Click to Watch](https://github.com/user-attachments/assets/f8677811-918f-45ea-9a59-8e8aa5a4d01e) |
+| 💧 Wet Waste Sorting | [▶ Click to Watch](https://github.com/user-attachments/assets/1a766f5a-52a2-4b8c-8a09-d119b750a81f) |
 
 </div>
 
