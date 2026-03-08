@@ -444,7 +444,7 @@ modify and share! See [LICENSE](LICENSE) for full details.
 
 <div align="center">
 
-<img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=16&pause=1000&color=00C853&center=true&vCenter=true&width=500&lines=Made+AT+Alauddin;University+IoT+Project+🎓;Bangladesh+🇧🇩" alt="Footer" />
+<img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=16&pause=1000&color=00C853&center=true&vCenter=true&width=500&lines=Made+by+AT+Alauddin;University+IoT+Project+🎓;Bangladesh+🇧🇩" alt="Footer" />
 
 <br/>
 
