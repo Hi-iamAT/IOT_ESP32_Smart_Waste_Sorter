@@ -158,7 +158,7 @@ which requires higher voltage.
 
 ---
 
-> ## 📋 [Click Here → Full Wiring Instructions & Circuit Diagram](Full_Wiring.html)
+> ## 📋 [Click Here → Full Wiring Instructions & Circuit Diagram](https://hi-iamat.github.io/IOT_ESP32_Smart_Waste_Sorter/Full_Wiring.html)
 
 ---
 
